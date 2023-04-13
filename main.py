@@ -1,6 +1,6 @@
 import pandas as pd
-import geopandas as gpd
 import numpy as np
+import geopandas as gpd
 import streamlit as st
 
 def detect_anomalies(df, column_name, threshold):
@@ -15,7 +15,7 @@ def detect_anomalies(df, column_name, threshold):
 
 st.title("Anomaly Detection - School Safety Zones")
 
-uploaded_file = st.file_uploader("Upload data set", type=["csv", "geojson"])
+uploaded_file = st.file_uploader("Upload data set", type="csv")
 
 DEFAULT_THRESHOLD = 2.5
 DEFAULT_COLUMN_NAME = "strobe_speed"
@@ -23,13 +23,7 @@ DEFAULT_COLUMN_NAME = "strobe_speed"
 threshold = st.sidebar.slider("Threshold", min_value=1.0, max_value=5.0, step=0.1, value=float(DEFAULT_THRESHOLD))
 
 if uploaded_file is not None:
-    if uploaded_file.type == 'text/csv':
-        df = pd.read_file(uploaded_file)
-    elif uploaded_file.type == 'application/geo+json':
-        df = gpd.read_file(uploaded_file)
-    else:
-        st.write("File type not supported. Please upload a CSV or GeoJSON file.")
-        st.stop()
+    df = pd.read_csv(uploaded_file)
 
     column_name = st.sidebar.selectbox("Column", df.columns, index=df.columns.get_loc(DEFAULT_COLUMN_NAME))
 
@@ -46,4 +40,4 @@ if uploaded_file is not None:
     else:
         st.write("No anomalies detected.")
 else:
-    st.write("Please upload a CSV or GeoJSON file!")
+    st.write("Please upload a CSV file!")
